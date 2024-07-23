@@ -20,5 +20,6 @@ fn main() -> AppExit {
         .add_systems(Startup, init_editor_settings)
         .add_systems(Startup, setup_camera)
         .add_systems(Startup, toolbar::setup_toolbar.after(init_editor_settings))
+        .add_systems(Update, toolbar::toggle_file_menu)
         .run()
 }

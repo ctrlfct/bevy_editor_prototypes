@@ -56,22 +56,48 @@ fn spawn_menu_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSet
     create_button(parent, editor_settings, "Help");
 }
 
+fn spawn_file_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
+    create_button(parent, editor_settings, "New");
+    create_button(parent, editor_settings, "Open");
+    create_button(parent, editor_settings, "Save");
+    create_button(parent, editor_settings, "Save As");
+    create_button(parent, editor_settings, "Close");
+}
 
 pub fn toggle_file_menu(
+    mut commands: Commands,
     mut interaction_query: Query<
         (&Interaction, &mut BackgroundColor, &Children),
         (Changed<Interaction>, With<FileButton>)
     >,
     mut text_query: Query<&mut Text>,
-    mut menu_query: Query<&mut Style, With<FileMenu>>,
+    menu_query: Query<Entity, With<FileMenu>>,
+    editor_settings: Res<EditorSettings>,
 ) {
     for (interaction, mut background_color, children) in interaction_query.iter_mut() {
-        println!("Interaction detected: {:?}", interaction);
         if let Interaction::Pressed = *interaction {
-            if let Some(child) = children.first() {
-                if let Ok(mut text) = text_query.get_mut(*child) {
-                    text.sections[0].value = "Pressed!".to_string();
-                }
+            if let Ok(menu_entity) = menu_query.get_single() {
+                // Menu exists, so close it
+                commands.entity(menu_entity).despawn_recursive();
+            } else {
+                // Menu doesn't exist, so create it
+                commands.spawn((
+                    NodeBundle {
+                        style: Style {
+                            position_type: PositionType::Absolute,
+                            top: Val::Px(35.0),
+                            left: Val::Px(0.0),
+                            flex_direction: FlexDirection::Column,
+                            ..default()
+                        },
+                        background_color: editor_settings.panel_background.into(),
+                        ..default()
+                    },
+                    FileMenu,
+                ))
+                .with_children(|parent| {
+                    spawn_file_buttons(parent, &editor_settings);
+                });
             }
         }
     }
