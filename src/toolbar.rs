@@ -15,35 +15,34 @@ const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
 const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
 
-pub fn setup_toolbar(mut commands: Commands, asset_server: Res<AssetServer>, settings: Res<EditorSettings>) {
-    commands
-        .spawn(toolbar_root())
-        .with_children(|parent| {
-            spawn_logo(parent, &asset_server);
+pub fn setup_toolbar(parent: &mut ChildBuilder, asset_server: &Res<AssetServer>, settings: &Res<EditorSettings>) {
+    parent.spawn(toolbar_root(settings))
+        .with_children(|toolbar_parent| {
+            spawn_logo(toolbar_parent, asset_server);
             
-            parent.spawn(menu_buttons_container())
+            toolbar_parent.spawn(menu_buttons_container())
                 .with_children(|menu_parent| {
-                    spawn_menu_buttons(menu_parent, &settings);
+                    spawn_menu_buttons(menu_parent, settings);
                 });
             
-            parent.spawn(player_buttons_container())
+            toolbar_parent.spawn(player_buttons_container())
                 .with_children(|player_parent| {
-                    spawn_player_buttons(player_parent, &settings);
+                    spawn_player_buttons(player_parent, settings);
                 });
         });
 }
 
-fn toolbar_root() -> NodeBundle {
+fn toolbar_root(settings: &EditorSettings) -> NodeBundle {
     NodeBundle {
         style: Style {
-            width: Val::Percent(100.0),
+            width: Val::Percent(99.0),
             height: Val::Px(50.0),
             justify_content: JustifyContent::FlexStart,
             align_items: AlignItems::Center,
             padding: UiRect::all(Val::Px(10.0)),
+            margin: UiRect::all(Val::Percent(0.5)),
             ..default()
         },
-        background_color: Color::srgb(0.2, 0.2, 0.2).into(),
         
         border_radius: BorderRadius::new (
             Val::Px(4.8),
@@ -51,6 +50,7 @@ fn toolbar_root() -> NodeBundle {
             Val::Px(4.8),
             Val::Px(4.8),
         ),
+        background_color: settings.sub_panel_background.into(),
         ..default()
     }
 }
