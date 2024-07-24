@@ -16,7 +16,6 @@ const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
 const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
 
 pub fn setup_toolbar(mut commands: Commands, asset_server: Res<AssetServer>, settings: Res<EditorSettings>) {
-    
     commands
         .spawn(toolbar_root())
         .with_children(|parent| {
@@ -37,7 +36,13 @@ fn toolbar_root() -> NodeBundle {
             ..default()
         },
         background_color: Color::srgb(0.2, 0.2, 0.2).into(),
-
+        
+        border_radius: BorderRadius::new (
+            Val::Px(4.8),
+            Val::Px(4.8),
+            Val::Px(4.8),
+            Val::Px(4.8),
+        ),
         ..default()
     }
 }
@@ -101,45 +106,6 @@ pub fn button_system(
             Interaction::None => {
                 *color = NORMAL_BUTTON.into();
                 border_color.0 = Color::BLACK;
-            }
-        }
-    }
-}
-
-pub fn toggle_file_menu(
-    mut commands: Commands,
-    mut interaction_query: Query<
-        (&Interaction, &mut BackgroundColor, &Children),
-        (Changed<Interaction>, With<FileButton>)
-    >,
-    mut text_query: Query<&mut Text>,
-    menu_query: Query<Entity, With<FileMenu>>,
-    editor_settings: Res<EditorSettings>,
-) {
-    for (interaction, mut background_color, children) in interaction_query.iter_mut() {
-        if let Interaction::Pressed = *interaction {
-            if let Ok(menu_entity) = menu_query.get_single() {
-                // Menu exists, so close it
-                commands.entity(menu_entity).despawn_recursive();
-            } else {
-                // Menu doesn't exist, so create it
-                commands.spawn((
-                    NodeBundle {
-                        style: Style {
-                            position_type: PositionType::Absolute,
-                            top: Val::Px(35.0),
-                            left: Val::Px(0.0),
-                            flex_direction: FlexDirection::Column,
-                            ..default()
-                        },
-                        background_color: editor_settings.panel_background.into(),
-                        ..default()
-                    },
-                    FileMenu,
-                ))
-                .with_children(|parent| {
-                    spawn_file_buttons(parent, &editor_settings);
-                });
             }
         }
     }
