@@ -102,7 +102,7 @@ fn spawn_file_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSet
     create_button(parent, editor_settings, "New");
     create_button(parent, editor_settings, "Open");
     create_button(parent, editor_settings, "Save");
-    create_button(parent, editor_settings, "Save As");
+    create_button(parent, editor_settings, "Save as");
     create_button(parent, editor_settings, "Close");
 }
 
