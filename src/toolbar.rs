@@ -20,8 +20,16 @@ pub fn setup_toolbar(mut commands: Commands, asset_server: Res<AssetServer>, set
         .spawn(toolbar_root())
         .with_children(|parent| {
             spawn_logo(parent, &asset_server);
-            spawn_menu_buttons(parent, &settings);
-            spawn_player_buttons(parent, &settings);
+            
+            parent.spawn(menu_buttons_container())
+                .with_children(|menu_parent| {
+                    spawn_menu_buttons(menu_parent, &settings);
+                });
+            
+            parent.spawn(player_buttons_container())
+                .with_children(|player_parent| {
+                    spawn_player_buttons(player_parent, &settings);
+                });
         });
 }
 
@@ -58,6 +66,28 @@ fn spawn_logo(parent: &mut ChildBuilder, asset_server: &Res<AssetServer>) {
         image: UiImage::new(asset_server.load("branding/bevy_bird_dark.png")),
         ..default()
     });
+}
+
+fn menu_buttons_container() -> NodeBundle {
+    NodeBundle {
+        style: Style {
+            justify_content: JustifyContent::FlexStart,
+            align_items: AlignItems::Center,
+            ..default()
+        },
+        ..default()
+    }
+}
+
+fn player_buttons_container() -> NodeBundle {
+    NodeBundle {
+        style: Style {
+            align_items: AlignItems::Center,
+            margin: UiRect::left(Val::Px(20.0)),
+            ..default()
+        },
+        ..default()
+    }
 }
 
 fn spawn_menu_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
