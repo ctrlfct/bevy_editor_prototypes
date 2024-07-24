@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use bevy::color::palettes::basic::*;
+
 use crate::button::create_button;
 use crate::editor_settings::EditorSettings;
 
@@ -9,6 +11,10 @@ pub struct FileMenu;
 #[derive(Component)]
 pub struct FileButton;
 
+const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
+const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
+const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
+
 pub fn setup_toolbar(mut commands: Commands, asset_server: Res<AssetServer>, settings: Res<EditorSettings>) {
     
     commands
@@ -16,6 +22,7 @@ pub fn setup_toolbar(mut commands: Commands, asset_server: Res<AssetServer>, set
         .with_children(|parent| {
             spawn_logo(parent, &asset_server);
             spawn_menu_buttons(parent, &settings);
+            spawn_player_buttons(parent, &settings);
         });
 }
 
@@ -62,6 +69,41 @@ fn spawn_file_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSet
     create_button(parent, editor_settings, "Save");
     create_button(parent, editor_settings, "Save As");
     create_button(parent, editor_settings, "Close");
+}
+
+fn spawn_player_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
+    create_button(parent, editor_settings, "Play");
+    create_button(parent, editor_settings, "Pause");
+    create_button(parent, editor_settings, "Stop");
+}
+
+pub fn button_system(
+    mut interaction_query: Query<
+        (
+            &Interaction,
+            &mut BackgroundColor,
+            &mut BorderColor,
+            &Children,
+        ),
+        (Changed<Interaction>, With<Button>),
+    >,
+) {
+    for (interaction, mut color, mut border_color, children) in &mut interaction_query {
+        match *interaction {
+            Interaction::Pressed => {
+                *color = PRESSED_BUTTON.into();
+                border_color.0 = RED.into();
+            }
+            Interaction::Hovered => {
+                *color = HOVERED_BUTTON.into();
+                border_color.0 = Color::WHITE;
+            }
+            Interaction::None => {
+                *color = NORMAL_BUTTON.into();
+                border_color.0 = Color::BLACK;
+            }
+        }
+    }
 }
 
 pub fn toggle_file_menu(

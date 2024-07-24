@@ -5,6 +5,7 @@ pub fn create_button(parent: &mut ChildBuilder, settings: &Res<EditorSettings>, 
     parent.spawn(ButtonBundle {
         style: button_style(),
         background_color: settings.button_background.into(),
+        border_radius: BorderRadius::MAX,
         ..default()
     }).with_children(|parent| {
         spawn_button_text(parent, settings, text);
