@@ -4,6 +4,9 @@ use bevy::color::palettes::basic::*;
 
 use crate::button::create_button;
 use crate::editor_settings::EditorSettings;
+use crate::ui_components::MenuButtonsAction;
+use crate::ui_components::FileButtonsAction;
+use crate::ui_components::PlayerButtonsAction;
 
 #[derive(Component)]
 pub struct FileMenu;
@@ -91,25 +94,25 @@ fn player_buttons_container() -> NodeBundle {
 }
 
 fn spawn_menu_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
-    create_button(parent, editor_settings, "File");
-    create_button(parent, editor_settings, "Edit");
-    create_button(parent, editor_settings, "View");
-    create_button(parent, editor_settings, "Window");
-    create_button(parent, editor_settings, "Help");
+    create_button(parent, editor_settings, "File", MenuButtonsAction::File);
+    create_button(parent, editor_settings, "Edit", MenuButtonsAction::Edit);
+    create_button(parent, editor_settings, "View", MenuButtonsAction::View);
+    create_button(parent, editor_settings, "Window", MenuButtonsAction::Window);
+    create_button(parent, editor_settings, "Help", MenuButtonsAction::Help);
 }
 
 fn spawn_file_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
-    create_button(parent, editor_settings, "New");
-    create_button(parent, editor_settings, "Open");
-    create_button(parent, editor_settings, "Save");
-    create_button(parent, editor_settings, "Save as");
-    create_button(parent, editor_settings, "Close");
+    create_button(parent, editor_settings, "New", FileButtonsAction::New);
+    create_button(parent, editor_settings, "Open", FileButtonsAction::Open);
+    create_button(parent, editor_settings, "Save", FileButtonsAction::Save);
+    create_button(parent, editor_settings, "Save as", FileButtonsAction::SaveAs);
+    create_button(parent, editor_settings, "Close", FileButtonsAction::Close);
 }
 
 fn spawn_player_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
-    create_button(parent, editor_settings, "Play");
-    create_button(parent, editor_settings, "Pause");
-    create_button(parent, editor_settings, "Stop");
+    create_button(parent, editor_settings, "Play", PlayerButtonsAction::Play);
+    create_button(parent, editor_settings, "Pause", PlayerButtonsAction::Pause);
+    create_button(parent, editor_settings, "Stop", PlayerButtonsAction::Stop);
 }
 
 pub fn button_system(
@@ -137,6 +140,16 @@ pub fn button_system(
                 *color = NORMAL_BUTTON.into();
                 border_color.0 = Color::BLACK;
             }
+        }
+    }
+}
+
+pub fn file_button_system(
+    interaction_query: Query<(&Interaction, &MenuButtonsAction), (Changed<Interaction>, With<Button>)>,
+) {
+    for (interaction, action) in interaction_query.iter() {
+        if *interaction == Interaction::Pressed && matches!(action, MenuButtonsAction::File) {
+            println!("File menu button pressed");
         }
     }
 }

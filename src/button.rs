@@ -1,13 +1,16 @@
 use bevy::prelude::*;
 use crate::editor_settings::EditorSettings;
 
-pub fn create_button(parent: &mut ChildBuilder, settings: &Res<EditorSettings>, text: &str) {
-    parent.spawn(ButtonBundle {
-        style: button_style(),
-        background_color: settings.button_background.into(),
-        border_radius: BorderRadius::MAX,
-        ..default()
-    }).with_children(|parent| {
+pub fn create_button<T: Component>(parent: &mut ChildBuilder, settings: &Res<EditorSettings>, text: &str, component: T) {
+    parent.spawn((
+        ButtonBundle {
+            style: button_style(),
+            background_color: settings.button_background.into(),
+            border_radius: BorderRadius::MAX,
+            ..default()
+        },
+        component,
+    )).with_children(|parent| {
         spawn_button_text(parent, settings, text);
     });
 }

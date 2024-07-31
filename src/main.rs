@@ -5,6 +5,7 @@ mod toolbar;
 mod button;
 mod editor_settings;
 mod main_canvas;
+mod ui_components;
 
 fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
@@ -22,5 +23,6 @@ fn main() {
         .add_systems(Startup, setup_camera)
         .add_systems(Startup, main_canvas::setup_ui.after(init_editor_settings))
         .add_systems(Update, toolbar::button_system)
+        .add_systems(Update, toolbar::file_button_system)
         .run();
 }
