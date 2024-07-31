@@ -6,6 +6,7 @@ mod button;
 mod editor_settings;
 mod main_canvas;
 mod ui_components;
+mod file_panel;
 
 fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
