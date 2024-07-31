@@ -24,5 +24,6 @@ fn main() {
         .add_systems(Startup, main_canvas::setup_ui.after(init_editor_settings))
         .add_systems(Update, toolbar::button_system)
         .add_systems(Update, toolbar::file_button_system)
+        .add_systems(Update, toolbar::manage_file_button_panel)
         .run();
 }
