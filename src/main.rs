@@ -2,11 +2,14 @@ use bevy::prelude::*;
 use crate::editor_settings::EditorSettings;
 
 mod toolbar;
+mod viewport;
 mod button;
 mod editor_settings;
 mod main_canvas;
 mod ui_components;
 mod file_panel;
+mod hierarchy;
+mod assets;
 
 fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());

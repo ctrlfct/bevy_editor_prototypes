@@ -29,6 +29,7 @@ pub fn spawn_file_panel(commands: &mut Commands, settings: &Res<EditorSettings>)
     commands
         .spawn((
             NodeBundle {
+                z_index: ZIndex::Local(1),
                 style: Style {
                     position_type: PositionType::Absolute,
                     flex_direction: FlexDirection::Column,
