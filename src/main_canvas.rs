@@ -10,26 +10,6 @@ use crate::inspector;
 #[derive(Component)]
 pub struct MainCanvas;
 
-pub fn spawn_main_canvas(commands: &mut Commands, settings: &Res<EditorSettings>) -> Entity {
-    commands
-        .spawn((
-            NodeBundle {
-                z_index: ZIndex::Local(1),
-                style: Style {
-                    width: Val::Percent(100.0),
-                    height: Val::Percent(100.0),
-                    padding: UiRect::all(Val::Px(5.0)),
-                    ..default()
-                },
-                background_color: settings.panel_background.into(),
-                ..default()
-            },
-            MainCanvas,
-        ))
-        .id()
-}
-
-
 pub fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>, settings: Res<EditorSettings>) {
     let canvas_entity = commands
         .spawn((
@@ -40,9 +20,12 @@ pub fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>, settings
                     display: Display::Grid,
                     grid_template_columns: vec![GridTrack::fr(1.0), GridTrack::fr(3.0), GridTrack::fr(1.0)],
                     grid_template_rows: vec![GridTrack::px(50.0), GridTrack::fr(1.0), GridTrack::px(160.0)],
+                    column_gap: Val::Px(5.0),  
+                    row_gap: Val::Px(5.0),    
+                    padding: UiRect::all(Val::Px(5.0)), 
                     ..default()
                 },
-                background_color: settings.panel_background.into(),
+                background_color: settings.sub_panel_background.into(),
                 ..default()
             },
             MainCanvas,
