@@ -10,6 +10,7 @@ mod ui_components;
 mod file_panel;
 mod hierarchy;
 mod assets;
+mod inspector;
 
 fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());

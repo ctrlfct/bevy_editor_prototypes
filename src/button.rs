@@ -54,7 +54,7 @@ fn spawn_button_text(parent: &mut ChildBuilder, settings: &Res<EditorSettings>, 
         TextStyle {
             font: settings.font.clone(),
             font_size: 16.0,
-            color: settings.button_text_color,
+            color: settings.text_color,
         },
     ));
 }

@@ -12,43 +12,35 @@ const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
 const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
 
 pub fn setup_toolbar(parent: &mut ChildBuilder, asset_server: &Res<AssetServer>, settings: &Res<EditorSettings>) {
-    parent.spawn(toolbar_root(settings))
-        .with_children(|toolbar_parent| {
-            spawn_logo(toolbar_parent, asset_server);
-            
-            toolbar_parent.spawn(menu_buttons_container())
-                .with_children(|menu_parent| {
-                    spawn_menu_buttons(menu_parent, settings);
-                });
-            
-            toolbar_parent.spawn(player_buttons_container())
-                .with_children(|player_parent| {
-                    spawn_player_buttons(player_parent, settings);
-                });
-        });
-}
-
-fn toolbar_root(settings: &EditorSettings) -> NodeBundle {
-    NodeBundle {
-        style: Style {
-            width: Val::Percent(99.0),
-            height: Val::Px(50.0),
-            justify_content: JustifyContent::FlexStart,
-            align_items: AlignItems::Center,
-            padding: UiRect::all(Val::Px(10.0)),
-            margin: UiRect::all(Val::Percent(0.5)),
+    parent.spawn((
+        NodeBundle {
+            style: Style {
+                width: Val::Percent(100.0),
+                height: Val::Px(50.0),
+                justify_content: JustifyContent::FlexStart,
+                align_items: AlignItems::Center,
+                padding: UiRect::all(Val::Px(10.0)),
+                grid_column: GridPlacement::span(3),
+                grid_row: GridPlacement::start(1),
+                ..default()
+            },
+            background_color: settings.panel_background.into(),
             ..default()
         },
+    ))
+    .with_children(|toolbar_parent| {
+        spawn_logo(toolbar_parent, asset_server);
         
-        border_radius: BorderRadius::new (
-            Val::Px(4.8),
-            Val::Px(4.8),
-            Val::Px(4.8),
-            Val::Px(4.8),
-        ),
-        background_color: settings.sub_panel_background.into(),
-        ..default()
-    }
+        toolbar_parent.spawn(menu_buttons_container())
+            .with_children(|menu_parent| {
+                spawn_menu_buttons(menu_parent, settings);
+            });
+        
+        toolbar_parent.spawn(player_buttons_container())
+            .with_children(|player_parent| {
+                spawn_player_buttons(player_parent, settings);
+            });
+    });
 }
 
 fn spawn_logo(parent: &mut ChildBuilder, asset_server: &Res<AssetServer>) {
