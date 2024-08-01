@@ -24,7 +24,7 @@ fn main() {
         .add_systems(Startup, setup_camera)
         .add_systems(Startup, main_canvas::setup_ui.after(init_editor_settings))
         .add_systems(Update, toolbar::button_system)
-        .add_systems(Update, toolbar::file_button_system)
-        .add_systems(Update, toolbar::manage_file_button_panel)
+        .add_systems(Update, file_panel::file_button_system)
+        .add_systems(Update, file_panel::manage_file_button_panel)
         .run();
 }

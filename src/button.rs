@@ -39,10 +39,10 @@ fn button_style(orientation: ButtonOrientation) -> Style {
         ButtonOrientation::Vertical => Style {
             width: Val::Px(100.0),
             height: Val::Px(30.0),
-            justify_content: JustifyContent::FlexStart,
+            justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
-            margin: UiRect::all(Val::Px(5.0)),
-            flex_direction: FlexDirection::Column,
+            margin: UiRect::vertical(Val::Px(5.0)),
+            // flex_direction: FlexDirection::Column,
             ..default()
         },
     }

@@ -5,17 +5,7 @@ use bevy::color::palettes::basic::*;
 use crate::button::{create_button, ButtonOrientation};
 use crate::editor_settings::EditorSettings;
 use crate::ui_components::MenuButtonsAction;
-use crate::ui_components::FileButtonsAction;
 use crate::ui_components::PlayerButtonsAction;
-
-#[derive(Component)]
-pub struct FileMenu;
-
-#[derive(Component)]
-pub struct FileButton;
-
-#[derive(Component)]
-pub struct FileButtonPanelVisible(bool);
 
 const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
@@ -104,14 +94,6 @@ fn spawn_menu_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSet
     create_button(parent, editor_settings, "Help", MenuButtonsAction::Help, ButtonOrientation::Horizontal);
 }
 
-fn spawn_file_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
-    create_button(parent, editor_settings, "New", FileButtonsAction::New, ButtonOrientation::Vertical);
-    create_button(parent, editor_settings, "Open", FileButtonsAction::Open, ButtonOrientation::Vertical);
-    create_button(parent, editor_settings, "Save", FileButtonsAction::Save, ButtonOrientation::Vertical);
-    create_button(parent, editor_settings, "Save as", FileButtonsAction::SaveAs, ButtonOrientation::Vertical);
-    create_button(parent, editor_settings, "Close", FileButtonsAction::Close, ButtonOrientation::Vertical);
-}
-
 fn spawn_player_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
     create_button(parent, editor_settings, "Play", PlayerButtonsAction::Play, ButtonOrientation::Horizontal);
     create_button(parent, editor_settings, "Pause", PlayerButtonsAction::Pause, ButtonOrientation::Horizontal);
@@ -143,39 +125,6 @@ pub fn button_system(
                 *color = NORMAL_BUTTON.into();
                 border_color.0 = Color::BLACK;
             }
-        }
-    }
-}
-
-pub fn file_button_system(
-    mut commands: Commands,
-    interaction_query: Query<(&Interaction, &MenuButtonsAction), (Changed<Interaction>, With<Button>)>,
-    panel_query: Query<(Entity, &FileButtonPanelVisible)>,
-    editor_settings: Res<EditorSettings>,
-) {
-    for (interaction, action) in interaction_query.iter() {
-        if *interaction == Interaction::Pressed && matches!(action, MenuButtonsAction::File) {
-            if let Ok((panel_entity, panel_visible)) = panel_query.get_single() {
-                commands.entity(panel_entity).insert(FileButtonPanelVisible(!panel_visible.0));
-            } else {
-                commands.spawn((NodeBundle::default(), FileButtonPanelVisible(true)));
-            }
-        }
-    }
-}
-
-pub fn manage_file_button_panel(
-    mut commands: Commands,
-    panel_query: Query<(Entity, &FileButtonPanelVisible), Changed<FileButtonPanelVisible>>,
-    editor_settings: Res<EditorSettings>,
-) {
-    for (entity, visible) in panel_query.iter() {
-        if visible.0 {
-            commands.entity(entity).with_children(|parent| {
-                spawn_file_buttons(parent, &editor_settings);
-            });
-        } else {
-            commands.entity(entity).despawn_descendants();
         }
     }
 }
