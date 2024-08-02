@@ -15,6 +15,13 @@ pub fn spawn_inspector(commands: &mut Commands, settings: &Res<EditorSettings>) 
                     padding: UiRect::all(Val::Px(10.0)),
                     ..default()
                 },
+
+                border_radius: BorderRadius::new (
+                    Val::Px(4.8),
+                    Val::Px(4.8),
+                    Val::Px(4.8),
+                    Val::Px(4.8),
+                ),
                 background_color: settings.panel_background.into(),
                 ..default()
             },

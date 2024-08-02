@@ -24,6 +24,13 @@ pub fn setup_toolbar(parent: &mut ChildBuilder, asset_server: &Res<AssetServer>,
                 grid_row: GridPlacement::start(1),
                 ..default()
             },
+
+            border_radius: BorderRadius::new (
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+            ),
             background_color: settings.panel_background.into(),
             ..default()
         },
