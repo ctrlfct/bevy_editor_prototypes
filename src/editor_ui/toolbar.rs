@@ -2,10 +2,10 @@ use bevy::prelude::*;
 
 use bevy::color::palettes::basic::*;
 
-use crate::button::{create_button, ButtonOrientation};
+use crate::editor_ui::button::{create_button, ButtonOrientation};
 use crate::editor_settings::EditorSettings;
-use crate::ui_components::MenuButtonsAction;
-use crate::ui_components::PlayerButtonsAction;
+use crate::editor_ui::ui_components::MenuButtonsAction;
+use crate::editor_ui::ui_components::PlayerButtonsAction;
 
 const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);

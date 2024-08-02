@@ -2,11 +2,11 @@ use bevy::prelude::*;
 
 use bevy::color::palettes::basic::*;
 
-use crate::button::{create_button, ButtonOrientation};
+use crate::editor_ui::button::{create_button, ButtonOrientation};
 use crate::editor_settings::EditorSettings;
-use crate::ui_components::MenuButtonsAction;
-use crate::ui_components::FileButtonsAction;
-use crate::ui_components::PlayerButtonsAction;
+use crate::editor_ui::ui_components::MenuButtonsAction;
+use crate::editor_ui::ui_components::FileButtonsAction;
+use crate::editor_ui::ui_components::PlayerButtonsAction;
 
 #[derive(Component)]
 pub struct FileButtonPanelVisible(bool);
@@ -25,7 +25,7 @@ pub fn file_button_system(
     }
 }
 
-pub fn spawn_file_panel(commands: &mut Commands, settings: &Res<EditorSettings>) -> Entity {
+pub fn spawn_file_panel(commands: &mut Commands, settings: &Res<EditorSettings>, button_position: Vec2) -> Entity {
     commands
         .spawn((
             NodeBundle {
@@ -35,8 +35,8 @@ pub fn spawn_file_panel(commands: &mut Commands, settings: &Res<EditorSettings>)
                     flex_direction: FlexDirection::Column,
                     justify_content: JustifyContent::FlexStart,
                     align_items: AlignItems::Center,
-                    top: Val::Px(60.0),
-                    left: Val::Px(10.0),
+                    top: Val::Px(button_position.y),
+                    left: Val::Px(button_position.x + 50.0),
                     ..default()
                 },
 

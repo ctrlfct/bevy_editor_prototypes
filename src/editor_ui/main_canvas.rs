@@ -1,11 +1,12 @@
 use bevy::prelude::*;
 use crate::editor_settings::EditorSettings;
-use crate::toolbar;
-use crate::file_panel;
-use crate::viewport;
-use crate::hierarchy;
-use crate::assets;
-use crate::inspector;
+use crate::editor_ui::toolbar;
+use crate::editor_ui::file_panel;
+use crate::editor_ui::viewport;
+use crate::editor_ui::hierarchy;
+use crate::editor_ui::assets;
+use crate::editor_ui::inspector;
+use crate::editor_ui::ui_components::MenuButtonsAction;
 
 #[derive(Component)]
 pub struct MainCanvas;
@@ -37,7 +38,10 @@ pub fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>, settings
     let asset_panel_entity = assets::spawn_asset_panel(&mut commands, &settings);
     let inspector_entity = inspector::spawn_inspector(&mut commands, &settings);
 
-    let file_panel_entity = file_panel::spawn_file_panel(&mut commands, &settings);
+    let file_button_position = Vec2::new(10.0, 50.0);
+    
+
+    let file_panel_entity = file_panel::spawn_file_panel(&mut commands, &settings, file_button_position);
 
     commands.entity(canvas_entity).push_children(&[viewport_entity, hierarchy_entity, asset_panel_entity, inspector_entity]);
 

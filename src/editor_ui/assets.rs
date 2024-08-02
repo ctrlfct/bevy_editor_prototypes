@@ -1,10 +1,10 @@
 use bevy::prelude::*;
-use crate::editor_settings::EditorSettings;
+use crate::editor_settings;
 
 #[derive(Component)]
 pub struct AssetPanel;
 
-pub fn spawn_asset_panel(commands: &mut Commands, settings: &Res<EditorSettings>) -> Entity {
+pub fn spawn_asset_panel(commands: &mut Commands, settings: &Res<editor_settings::EditorSettings>) -> Entity {
     commands
         .spawn((
             NodeBundle {
