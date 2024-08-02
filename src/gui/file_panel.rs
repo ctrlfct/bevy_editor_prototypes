@@ -2,11 +2,11 @@ use bevy::prelude::*;
 
 use bevy::color::palettes::basic::*;
 
-use crate::editor_ui::button::{create_button, ButtonOrientation};
+use crate::gui::button::{create_button, ButtonOrientation};
 use crate::editor_settings::EditorSettings;
-use crate::editor_ui::ui_components::MenuButtonsAction;
-use crate::editor_ui::ui_components::FileButtonsAction;
-use crate::editor_ui::ui_components::PlayerButtonsAction;
+use crate::gui::ui_components::MenuButtonsAction;
+use crate::gui::ui_components::FileButtonsAction;
+use crate::gui::ui_components::PlayerButtonsAction;
 
 #[derive(Component)]
 pub struct FileButtonPanelVisible(bool);

@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 use crate::editor_settings::EditorSettings;
-use crate::editor_ui::toolbar;
-use crate::editor_ui::file_panel;
-use crate::editor_ui::viewport;
-use crate::editor_ui::hierarchy;
-use crate::editor_ui::assets;
-use crate::editor_ui::inspector;
-use crate::editor_ui::ui_components::MenuButtonsAction;
+use crate::gui::toolbar;
+use crate::gui::file_panel;
+use crate::gui::viewport;
+use crate::gui::hierarchy;
+use crate::gui::assets;
+use crate::gui::inspector;
+use crate::gui::ui_components::MenuButtonsAction;
 
 #[derive(Component)]
 pub struct MainCanvas;
