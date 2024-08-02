@@ -1,19 +1,22 @@
+use rfd::FileDialog;
 use std::fs;
-use native_dialog::FileDialog;
+use std::path::{Path, PathBuf};
 
-pub fn create_new_project() -> Result<(), Box<dyn std::error::Error>> {
-    let path = FileDialog::new()
-        .set_location("~")
-        .add_filter("Project Directory", &[""])
-        .show_open_single_dir()?;
+/// Function to create a new project in the selected directory
+pub fn create_new_project() -> Option<PathBuf> {
+    if let Some(selected_dir) = FileDialog::new()
+        .set_title("Select Directory for New Project")
+        .pick_folder()
+    {
+        let project_path = selected_dir.join("NewProject");
+        if let Err(e) = fs::create_dir(&project_path) {
+            eprintln!("Failed to create project directory: {}", e);
+            return None;
+        }
 
-    if let Some(path) = path {
-        let project_name = "New Project";
-        let project_path = path.join(project_name);
-
-        fs::create_dir_all(&project_path)?;
         println!("Created new project at: {:?}", project_path);
+        Some(project_path)
+    } else {
+        None
     }
-
-    Ok(())
 }
