@@ -37,6 +37,8 @@ pub fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>, settings
     let asset_panel_entity = assets::spawn_asset_panel(&mut commands, &settings);
     let inspector_entity = inspector::spawn_inspector(&mut commands, &settings);
 
+    let file_panel_entity = file_panel::spawn_file_panel(&mut commands, &settings);
+
     commands.entity(canvas_entity).push_children(&[viewport_entity, hierarchy_entity, asset_panel_entity, inspector_entity]);
 
     commands.entity(canvas_entity).with_children(|parent| {
