@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::camera::RenderTarget, window::WindowRef};
 use crate::gui::ui_components::FileButtonsAction;
 use crate::editor::create_project;
 use crate::gui::project_selector;
@@ -22,10 +22,23 @@ pub fn open_project_selector_system(
 ) {
     for (interaction, action) in interaction_query.iter() {
         if *interaction == Interaction::Pressed && matches!(action, FileButtonsAction::Open) {
-            commands.spawn(Window {
-                title: "Project selector".to_owned(),
-                ..Default::default()
-            });
+            let project_selector_window = commands
+                .spawn(Window {
+                    title: "Project selector".to_owned(),
+                    ..default()
+                })
+                .id();
+            
+            let second_window_camera = commands
+                .spawn(Camera2dBundle {
+                    camera: Camera {
+                        target: RenderTarget::Window(WindowRef::Entity(project_selector_window)),
+                        ..default()
+                    },
+                    ..default()
+                })
+                .id();
+
         }
     }
 }
