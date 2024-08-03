@@ -24,7 +24,7 @@ pub fn open_project_selector_system(
         if *interaction == Interaction::Pressed && matches!(action, FileButtonsAction::Open) {
             let project_selector_window = commands
                 .spawn(Window {
-                    title: "Project selector".to_owned(),
+                    title: "Select project".to_owned(),
                     ..default()
                 })
                 .id();
