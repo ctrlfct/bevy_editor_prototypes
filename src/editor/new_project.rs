@@ -1,17 +1,6 @@
-use rfd::{FileDialog, MessageDialog, MessageDialogResult};
-use std::fs;
-use std::path::{Path, PathBuf};
 use bevy::prelude::*;
 use crate::gui::ui_components::FileButtonsAction;
-use crate::editor::init_project;
 use crate::editor::create_project;
-use std::process::Command;
-
-#[cfg(target_family = "unix")]
-use std::os::unix::fs::PermissionsExt;
-
-#[cfg(target_family = "windows")]
-use std::os::windows::prelude::*;
 
 pub fn new_project_system(
     mut interaction_query: Query<

@@ -1,10 +1,7 @@
 use rfd::{FileDialog, MessageDialog, MessageDialogResult};
 use std::fs;
 use std::path::{Path, PathBuf};
-use bevy::prelude::*;
-use crate::gui::ui_components::FileButtonsAction;
 use crate::editor::init_project;
-use std::process::Command;
 
 /// Function to create a new project in the selected directory
 pub fn create_new_project(project_name: &str) -> Option<PathBuf> {

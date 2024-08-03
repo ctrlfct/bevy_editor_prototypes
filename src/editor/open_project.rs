@@ -1,15 +1,17 @@
-use rfd::FileDialog;
-use std::path::PathBuf;
+use bevy::prelude::*;
+use crate::gui::ui_components::FileButtonsAction;
+use crate::editor::create_project;
+use crate::gui::project_selector;
 
-/// Opens a dialog to select an existing project directory.
-///
-/// # Returns
-///
-/// An `Option<PathBuf>` where `Some(PathBuf)` contains the path to the selected
-/// directory or `None` if no directory was selected.
-pub fn open_existing_project() -> Option<PathBuf> {
-    // Open the file dialog to select an existing project directory
-    FileDialog::new()
-        .set_title("Select Existing Project Directory")
-        .pick_folder()
+pub fn open_project_system(
+    mut interaction_query: Query<
+        (&Interaction, &FileButtonsAction),
+        (Changed<Interaction>, With<Button>),
+    >,
+) {
+    for (interaction, action) in interaction_query.iter() {
+        if *interaction == Interaction::Pressed && matches!(action, FileButtonsAction::Open) {
+            println!("Opened!");
+        }
+    }
 }

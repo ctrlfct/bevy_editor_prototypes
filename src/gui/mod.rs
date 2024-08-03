@@ -8,3 +8,4 @@ pub mod file_panel;
 pub mod hierarchy;
 pub mod assets;
 pub mod inspector;
+pub mod project_selector;

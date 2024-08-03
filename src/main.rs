@@ -15,13 +15,14 @@ fn init_editor_settings(mut commands: Commands, asset_server: Res<AssetServer>) 
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_systems(Startup, init_editor_settings)
-        .add_systems(Startup, setup_camera)
-        .add_systems(Startup, gui::main_canvas::setup_ui.after(init_editor_settings))
-        .add_systems(Update, gui::toolbar::button_system)
-        .add_systems(Update, gui::file_panel::file_button_system)
-        .add_systems(Update, gui::file_panel::manage_file_button_panel)
-        .add_systems(Update, editor::new_project::new_project_system)
-        .run();
+    .add_plugins(DefaultPlugins)
+    .add_systems(Startup, init_editor_settings)
+    .add_systems(Startup, setup_camera)
+    .add_systems(Startup, gui::main_canvas::setup_ui.after(init_editor_settings))
+    .add_systems(Update, gui::toolbar::button_system)
+    .add_systems(Update, gui::file_panel::file_button_system)
+    .add_systems(Update, gui::file_panel::manage_file_button_panel)
+    .add_systems(Update, editor::new_project::new_project_system)
+    .add_systems(Update, gui::project_selector::open_project_selector_system)
+    .run();
 }
