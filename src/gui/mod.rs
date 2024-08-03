@@ -1,6 +1,7 @@
 pub mod toolbar;
 pub mod viewport;
 pub mod button;
+pub mod input_field;
 pub mod main_canvas;
 pub mod ui_components;
 pub mod file_panel;

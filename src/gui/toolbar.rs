@@ -3,9 +3,12 @@ use bevy::prelude::*;
 use bevy::color::palettes::basic::*;
 
 use crate::gui::button::{create_button, ButtonOrientation};
+use crate::gui::input_field::create_input_field;
 use crate::editor_settings::EditorSettings;
 use crate::gui::ui_components::MenuButtonsAction;
 use crate::gui::ui_components::PlayerButtonsAction;
+
+use super::ui_components::CommandPaletteAction;
 
 const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
@@ -47,6 +50,11 @@ pub fn setup_toolbar(parent: &mut ChildBuilder, asset_server: &Res<AssetServer>,
             .with_children(|player_parent| {
                 spawn_player_buttons(player_parent, settings);
             });
+
+        toolbar_parent.spawn(command_palette_container())
+            .with_children(|command_palette_parent| {
+                spawn_command_palette(command_palette_parent, settings);
+            });
     });
 }
 
@@ -85,6 +93,17 @@ fn player_buttons_container() -> NodeBundle {
     }
 }
 
+fn command_palette_container() -> NodeBundle {
+    NodeBundle {
+        style: Style {
+            justify_content: JustifyContent::FlexStart,
+            align_items: AlignItems::Center,
+            ..default()
+        },
+        ..default()
+    }
+}
+
 fn spawn_menu_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
     create_button(parent, editor_settings, "File", MenuButtonsAction::File, ButtonOrientation::Horizontal);
     create_button(parent, editor_settings, "Edit", MenuButtonsAction::Edit, ButtonOrientation::Horizontal);
@@ -97,6 +116,10 @@ fn spawn_player_buttons(parent: &mut ChildBuilder, editor_settings: &Res<EditorS
     create_button(parent, editor_settings, "Play", PlayerButtonsAction::Play, ButtonOrientation::Horizontal);
     create_button(parent, editor_settings, "Pause", PlayerButtonsAction::Pause, ButtonOrientation::Horizontal);
     create_button(parent, editor_settings, "Stop", PlayerButtonsAction::Stop, ButtonOrientation::Horizontal);
+}
+
+fn spawn_command_palette(parent: &mut ChildBuilder, editor_settings: &Res<EditorSettings>) {
+    create_input_field(parent, editor_settings, "Command Palette", CommandPaletteAction);
 }
 
 pub fn button_system(

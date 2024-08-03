@@ -4,6 +4,7 @@ use bevy::prelude::*;
 pub struct EditorSettings {
     pub font: Handle<Font>,
     pub text_color: Color,
+    pub input_panel_background: Color,
     pub panel_background: Color,
     pub sub_panel_background: Color,
     pub button_background: Color,
@@ -18,6 +19,7 @@ impl EditorSettings {
         Self {
             font: asset_server.load("fonts/FiraSans-Bold.ttf"),
             text_color: Color::srgb(1.0, 1.0, 1.0),
+            input_panel_background: Color::srgb(0.094, 0.094, 0.1),
             panel_background: Color::srgb(0.137, 0.137, 0.149),
             sub_panel_background: Color::srgb(0.22, 0.22, 0.24),
             button_background: Color::srgb(0.2, 0.2, 0.2),

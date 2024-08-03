@@ -17,6 +17,10 @@ pub enum PlayerButtonsAction {
 }
 
 #[derive(Component)]
+pub struct CommandPaletteAction;
+
+
+#[derive(Component)]
 pub enum FileButtonsAction {
     New,
     Open,
