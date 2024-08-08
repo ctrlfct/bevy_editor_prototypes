@@ -23,6 +23,7 @@ fn main() {
     .add_systems(Update, gui::file_panel::file_button_system)
     .add_systems(Update, gui::file_panel::manage_file_button_panel)
     .add_systems(Update, editor::new_project::new_project_system)
-    .add_systems(Update, gui::project_selector::open_project_selector_system)
+    .add_systems(Update, gui::project_manager::open_project_selector_system)
+    .add_systems(Update, editor::close_editor::close_editor_system)
     .run();
 }

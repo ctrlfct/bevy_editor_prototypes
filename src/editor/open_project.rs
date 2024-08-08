@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use crate::gui::ui_components::FileButtonsAction;
 use crate::editor::create_project;
-use crate::gui::project_selector;
+use crate::gui::project_manager;
 
 pub fn open_project_system(
     mut interaction_query: Query<

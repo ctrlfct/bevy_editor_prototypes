@@ -1,19 +1,10 @@
 use bevy::{prelude::*, render::camera::RenderTarget, window::WindowRef};
 use crate::gui::ui_components::FileButtonsAction;
 use crate::editor::create_project;
-use crate::gui::project_selector;
+use crate::gui::project_manager;
 
 #[derive(Component)]
 pub struct ProjectSelectorWindowVisible(bool);
-
-fn spawn_project_selector_window(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let project_selector_window = commands
-        .spawn(Window {
-            title: "Project selector".to_owned(),
-            ..default()
-        })
-        .id();
-}
 
 pub fn open_project_selector_system(
     mut commands: Commands,
@@ -24,7 +15,7 @@ pub fn open_project_selector_system(
         if *interaction == Interaction::Pressed && matches!(action, FileButtonsAction::Open) {
             let project_selector_window = commands
                 .spawn(Window {
-                    title: "Select project".to_owned(),
+                    title: "Project manager".to_owned(),
                     ..default()
                 })
                 .id();
