@@ -19,6 +19,7 @@ fn main() {
     .add_systems(Startup, init_editor_settings)
     .add_systems(Startup, setup_camera)
     .add_systems(Startup, gui::main_canvas::setup_ui.after(init_editor_settings))
+
     .add_systems(Update, gui::toolbar::button_system)
     .add_systems(Update, gui::file_panel::file_button_system)
     .add_systems(Update, gui::file_panel::manage_file_button_panel)
@@ -28,5 +29,6 @@ fn main() {
     .add_systems(Update, gui::new_project::open_project_creator_system)
     .add_systems(Update, gui::new_project::setup_ui.after(gui::new_project::open_project_creator_system))
     .add_systems(Update, editor::close_editor::close_editor_system)
+    
     .run();
 }
