@@ -9,3 +9,4 @@ pub mod hierarchy;
 pub mod assets;
 pub mod inspector;
 pub mod project_manager;
+pub mod new_project;
