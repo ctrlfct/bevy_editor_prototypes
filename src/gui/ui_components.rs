@@ -34,3 +34,15 @@ pub enum EditButtonsAction {
     Undo,
     Redo,
 }
+
+#[derive(Component)]
+pub struct ProjectNameInputFieldAction;
+
+#[derive(Component)]
+pub struct ProjectPathInputFieldAction;
+
+#[derive(Component)]
+pub enum NewProjectButtonsAction {
+    Cancel, 
+    Create,
+}

@@ -3,6 +3,8 @@ use crate::editor_settings::EditorSettings;
 use crate::gui::ui_components::FileButtonsAction;
 use crate::editor::create_project;
 use crate::gui::project_manager;
+use crate::gui::button::{create_button, ButtonOrientation};
+use crate::gui::input_field::create_input_field;
 
 #[derive(Component)]
 pub struct ProjectSelector;
