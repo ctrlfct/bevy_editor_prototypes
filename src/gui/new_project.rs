@@ -16,10 +16,11 @@ pub struct ProjectCreator;
 #[derive(Component)]
 pub struct ProjectCreatorCamera;
 
-pub fn open_project_creator_system(
+pub fn handle_project_creator(
     mut commands: Commands,
     interaction_query: Query<(&Interaction, &FileButtonsAction), (Changed<Interaction>, With<Button>)>,
     asset_server: Res<AssetServer>,
+    settings: Res<EditorSettings>,
 ) {
     for (interaction, action) in interaction_query.iter() {
         if *interaction == Interaction::Pressed && matches!(action, FileButtonsAction::New) {
@@ -31,112 +32,112 @@ pub fn open_project_creator_system(
                 .id();
             
             let project_creator_camera = commands
-            .spawn((
-                Camera2dBundle {
-                    camera: Camera {
-                        target: RenderTarget::Window(WindowRef::Entity(project_creator_window)),
+                .spawn((
+                    Camera2dBundle {
+                        camera: Camera {
+                            target: RenderTarget::Window(WindowRef::Entity(project_creator_window)),
+                            ..default()
+                        },
                         ..default()
                     },
-                    ..default()
-                },
-                ProjectCreatorCamera
-            ))
-            .id();
+                    ProjectCreatorCamera
+                ))
+                .id();
 
+            setup_ui(&mut commands, &asset_server, &settings, project_creator_camera);
         }
     }
 }
 
-pub fn setup_ui(
-    mut commands: Commands, 
-    asset_server: Res<AssetServer>, 
-    settings: Res<EditorSettings>,
-    camera_query: Query<Entity, With<ProjectCreatorCamera>>,
+fn setup_ui(
+    commands: &mut Commands,
+    asset_server: &Res<AssetServer>,
+    settings: &Res<EditorSettings>,
+    project_creator_camera: Entity,
 ) {
-    if let Ok(project_creator_camera) = camera_query.get_single() {
-        let canvas_entity = commands
-            .spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Percent(100.0),
-                        height: Val::Percent(100.0),
-                        display: Display::Grid,
-                        grid_template_columns: vec![GridTrack::fr(1.0), GridTrack::auto(), GridTrack::fr(1.0)],
-                        grid_template_rows: vec![GridTrack::fr(1.0), GridTrack::auto(), GridTrack::auto(), GridTrack::auto(), GridTrack::fr(1.0)],
-                        ..default()
-                    },
-                    background_color: settings.sub_panel_background.into(),
-                    ..default()
-                },
-                ProjectCreator,
-                TargetCamera(project_creator_camera),
-            ))
-            .id();
-
-        let project_name_entity = commands
-            .spawn(NodeBundle {
+    let canvas_entity = commands
+        .spawn((
+            NodeBundle {
                 style: Style {
-                    display: Display::Flex,
-                    justify_content: JustifyContent::Center,
-                    align_items: AlignItems::Center,
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    display: Display::Grid,
+                    grid_template_columns: vec![GridTrack::fr(1.0), GridTrack::auto(), GridTrack::fr(1.0)],
+                    grid_template_rows: vec![GridTrack::fr(1.0), GridTrack::auto(), GridTrack::auto(), GridTrack::auto(), GridTrack::fr(1.0)],
                     ..default()
                 },
+                background_color: settings.sub_panel_background.into(),
                 ..default()
-            })
-            .with_children(|parent| {
-                create_input_field(parent, &settings, "Project Name", ProjectNameInputFieldAction);
-            })
-            .id();
+            },
+            ProjectCreator,
+            TargetCamera(project_creator_camera),
+        ))
+        .id();
 
-        let project_path_entity = commands
-            .spawn(NodeBundle {
-                style: Style {
-                    display: Display::Flex,
-                    justify_content: JustifyContent::Center,
-                    align_items: AlignItems::Center,
-                    ..default()
-                },
+    let project_name_entity = commands
+        .spawn(NodeBundle {
+            style: Style {
+                display: Display::Flex,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
                 ..default()
-            })
-            .with_children(|parent| {
-                create_input_field(parent, &settings, "Project Path", ProjectPathInputFieldAction);
-            })
-            .id();
+            },
+            ..default()
+        })
+        .with_children(|parent| {
+            create_input_field(parent, settings, "Project Name", ProjectNameInputFieldAction);
+        })
+        .id();
 
-        let buttons_entity = commands
-            .spawn(NodeBundle {
-                style: Style {
-                    display: Display::Flex,
-                    justify_content: JustifyContent::SpaceEvenly,
-                    align_items: AlignItems::Center,
-                    ..default()
-                },
+    let project_path_entity = commands
+        .spawn(NodeBundle {
+            style: Style {
+                display: Display::Flex,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
                 ..default()
-            })
-            .with_children(|parent| {
-                create_button(parent, &settings, "Cancel", NewProjectButtonsAction::Cancel, ButtonOrientation::Horizontal);
-                create_button(parent, &settings, "Create", NewProjectButtonsAction::Create, ButtonOrientation::Horizontal);
-            })
-            .id();
-
-        commands.entity(canvas_entity).push_children(&[project_name_entity, project_path_entity, buttons_entity]);
-
-        commands.entity(project_name_entity).insert(Style {
-            grid_column: GridPlacement::start(2),
-            grid_row: GridPlacement::start(2),
+            },
             ..default()
-        });
+        })
+        .with_children(|parent| {
+            create_input_field(parent, settings, "Project Path", ProjectPathInputFieldAction);
+        })
+        .id();
 
-        commands.entity(project_path_entity).insert(Style {
-            grid_column: GridPlacement::start(2),
-            grid_row: GridPlacement::start(3),
+    let buttons_entity = commands
+        .spawn(NodeBundle {
+            style: Style {
+                display: Display::Flex,
+                justify_content: JustifyContent::SpaceEvenly,
+                align_items: AlignItems::Center,
+                ..default()
+            },
             ..default()
-        });
+        })
+        .with_children(|parent| {
+            create_button(parent, settings, "Cancel", NewProjectButtonsAction::Cancel, ButtonOrientation::Horizontal);
+            create_button(parent, settings, "Create", NewProjectButtonsAction::Create, ButtonOrientation::Horizontal);
+        })
+        .id();
 
-        commands.entity(buttons_entity).insert(Style {
-            grid_column: GridPlacement::start(2),
-            grid_row: GridPlacement::start(4),
-            ..default()
-        });
-    }
+    commands.entity(canvas_entity).push_children(&[project_name_entity, project_path_entity, buttons_entity]);
+
+    commands.entity(project_name_entity).insert(Style {
+        grid_column: GridPlacement::start(2),
+        grid_row: GridPlacement::start(2),
+        ..default()
+    });
+
+    commands.entity(project_path_entity).insert(Style {
+        grid_column: GridPlacement::start(2),
+        grid_row: GridPlacement::start(3),
+        ..default()
+    });
+
+    commands.entity(buttons_entity).insert(Style {
+        grid_column: GridPlacement::start(2),
+        grid_row: GridPlacement::start(4),
+        ..default()
+    });
 }
+

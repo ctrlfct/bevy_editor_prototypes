@@ -16,6 +16,7 @@ pub fn open_project_selector_system(
     mut commands: Commands,
     interaction_query: Query<(&Interaction, &FileButtonsAction), (Changed<Interaction>, With<Button>)>,
     asset_server: Res<AssetServer>,
+    settings: Res<EditorSettings>,
 ) {
     for (interaction, action) in interaction_query.iter() {
         if *interaction == Interaction::Pressed && matches!(action, FileButtonsAction::Open) {
@@ -26,7 +27,7 @@ pub fn open_project_selector_system(
                 })
                 .id();
             
-                let project_manager_camera = commands
+            let project_manager_camera = commands
                 .spawn((
                     Camera2dBundle {
                         camera: Camera {
@@ -38,112 +39,112 @@ pub fn open_project_selector_system(
                     ProjectManagerCamera
                 ))
                 .id();
-
+            
+            setup_ui(&mut commands, &asset_server, &settings, project_manager_camera);
         }
     }
 }
 
 pub fn setup_ui(
-    mut commands: Commands, 
-    asset_server: Res<AssetServer>, 
-    settings: Res<EditorSettings>,
-    camera_query: Query<Entity, With<ProjectManagerCamera>>,
+    commands: &mut Commands, 
+    asset_server: &Res<AssetServer>, 
+    settings: &Res<EditorSettings>,
+    project_manager_camera: Entity,
 ) {
-    if let Ok(project_manager_camera) = camera_query.get_single() {
-        let canvas_entity = commands
-            .spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Percent(100.0),
-                        height: Val::Percent(100.0),
-                        display: Display::Grid,
-                        grid_template_columns: vec![GridTrack::fr(2.0), GridTrack::fr(1.0)],
-                        grid_template_rows: vec![GridTrack::px(50.0), GridTrack::fr(1.0)],
-                        column_gap: Val::Px(5.0),
-                        row_gap: Val::Px(5.0),
-                        padding: UiRect::all(Val::Px(5.0)),
-                        ..default()
-                    },
-                    background_color: settings.sub_panel_background.into(),
-                    ..default()
-                },
-                ProjectSelector,
-                TargetCamera(project_manager_camera),
-            ))
-            .id();
-
-        let top_panel = commands
-            .spawn(NodeBundle {
+    let canvas_entity = commands
+        .spawn((
+            NodeBundle {
                 style: Style {
                     width: Val::Percent(100.0),
                     height: Val::Percent(100.0),
+                    display: Display::Grid,
+                    grid_template_columns: vec![GridTrack::fr(2.0), GridTrack::fr(1.0)],
+                    grid_template_rows: vec![GridTrack::px(50.0), GridTrack::fr(1.0)],
+                    column_gap: Val::Px(5.0),
+                    row_gap: Val::Px(5.0),
+                    padding: UiRect::all(Val::Px(5.0)),
                     ..default()
                 },
-                border_radius: BorderRadius::new (
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                ),
-                background_color: settings.panel_background.into(),
+                background_color: settings.sub_panel_background.into(),
                 ..default()
-            })
-            .id();
+            },
+            ProjectSelector,
+            TargetCamera(project_manager_camera),
+        ))
+        .id();
 
-        let left_panel = commands
-            .spawn(NodeBundle {
-                style: Style {
-                    width: Val::Percent(100.0),
-                    height: Val::Percent(100.0),
-                    ..default()
-                },
-                border_radius: BorderRadius::new (
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                ),
-                background_color: settings.panel_background.into(),
+    let top_panel = commands
+        .spawn(NodeBundle {
+            style: Style {
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
                 ..default()
-            })
-            .id();
+            },
+            border_radius: BorderRadius::new (
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+            ),
+            background_color: settings.panel_background.into(),
+            ..default()
+        })
+        .id();
 
-        let right_panel = commands
-            .spawn(NodeBundle {
-                style: Style {
-                    width: Val::Percent(100.0),
-                    height: Val::Percent(100.0),
-                    ..default()
-                },
-                border_radius: BorderRadius::new (
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                    Val::Px(4.8),
-                ),
-                background_color: settings.panel_background.into(),
+    let left_panel = commands
+        .spawn(NodeBundle {
+            style: Style {
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
                 ..default()
-            })
-            .id();
-
-        commands.entity(canvas_entity).push_children(&[top_panel, left_panel, right_panel]);
-
-        commands.entity(top_panel).insert(Style {
-            grid_column: GridPlacement::span(2),
-            grid_row: GridPlacement::start(1),
+            },
+            border_radius: BorderRadius::new (
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+            ),
+            background_color: settings.panel_background.into(),
             ..default()
-        });
+        })
+        .id();
 
-        commands.entity(left_panel).insert(Style {
-            grid_column: GridPlacement::start(1),
-            grid_row: GridPlacement::start(2),
+    let right_panel = commands
+        .spawn(NodeBundle {
+            style: Style {
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
+                ..default()
+            },
+            border_radius: BorderRadius::new (
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+                Val::Px(4.8),
+            ),
+            background_color: settings.panel_background.into(),
             ..default()
-        });
+        })
+        .id();
 
-        commands.entity(right_panel).insert(Style {
-            grid_column: GridPlacement::start(2),
-            grid_row: GridPlacement::start(2),
-            ..default()
-        });
-    }
+    commands.entity(canvas_entity).push_children(&[top_panel, left_panel, right_panel]);
+
+    commands.entity(top_panel).insert(Style {
+        grid_column: GridPlacement::span(2),
+        grid_row: GridPlacement::start(1),
+        ..default()
+    });
+
+    commands.entity(left_panel).insert(Style {
+        grid_column: GridPlacement::start(1),
+        grid_row: GridPlacement::start(2),
+        ..default()
+    });
+
+    commands.entity(right_panel).insert(Style {
+        grid_column: GridPlacement::start(2),
+        grid_row: GridPlacement::start(2),
+        ..default()
+    });
 }
+
