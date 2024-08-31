@@ -46,3 +46,10 @@ pub enum NewProjectButtonsAction {
     Cancel, 
     Create,
 }
+
+#[derive(Component)]
+pub enum ProjectManagerAction {
+    Run,
+    Rename,
+    Remove,
+}

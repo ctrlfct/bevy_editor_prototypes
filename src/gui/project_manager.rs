@@ -1,10 +1,7 @@
 use bevy::{prelude::*, render::camera::RenderTarget, window::WindowRef};
 use crate::editor_settings::EditorSettings;
-use crate::gui::ui_components::FileButtonsAction;
-use crate::editor::create_project;
-use crate::gui::project_manager;
+use crate::gui::ui_components::{FileButtonsAction, ProjectManagerAction};
 use crate::gui::button::{create_button, ButtonOrientation};
-use crate::gui::input_field::create_input_field;
 
 #[derive(Component)]
 pub struct ProjectSelector;
@@ -12,7 +9,7 @@ pub struct ProjectSelector;
 #[derive(Component)]
 pub struct ProjectManagerCamera;
 
-pub fn open_project_selector_system(
+pub fn handle_project_manager(
     mut commands: Commands,
     interaction_query: Query<(&Interaction, &FileButtonsAction), (Changed<Interaction>, With<Button>)>,
     asset_server: Res<AssetServer>,
@@ -39,15 +36,15 @@ pub fn open_project_selector_system(
                     ProjectManagerCamera
                 ))
                 .id();
-            
+
             setup_ui(&mut commands, &asset_server, &settings, project_manager_camera);
         }
     }
 }
 
-pub fn setup_ui(
-    commands: &mut Commands, 
-    asset_server: &Res<AssetServer>, 
+fn setup_ui(
+    commands: &mut Commands,
+    asset_server: &Res<AssetServer>,
     settings: &Res<EditorSettings>,
     project_manager_camera: Entity,
 ) {
@@ -80,12 +77,14 @@ pub fn setup_ui(
                 height: Val::Percent(100.0),
                 ..default()
             },
+
             border_radius: BorderRadius::new (
                 Val::Px(4.8),
                 Val::Px(4.8),
                 Val::Px(4.8),
                 Val::Px(4.8),
             ),
+
             background_color: settings.panel_background.into(),
             ..default()
         })
@@ -98,12 +97,14 @@ pub fn setup_ui(
                 height: Val::Percent(100.0),
                 ..default()
             },
+
             border_radius: BorderRadius::new (
                 Val::Px(4.8),
                 Val::Px(4.8),
                 Val::Px(4.8),
                 Val::Px(4.8),
             ),
+
             background_color: settings.panel_background.into(),
             ..default()
         })
@@ -114,16 +115,27 @@ pub fn setup_ui(
             style: Style {
                 width: Val::Percent(100.0),
                 height: Val::Percent(100.0),
+                display: Display::Flex,
+                flex_direction: FlexDirection::Column,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
                 ..default()
             },
+
             border_radius: BorderRadius::new (
                 Val::Px(4.8),
                 Val::Px(4.8),
                 Val::Px(4.8),
                 Val::Px(4.8),
             ),
+            
             background_color: settings.panel_background.into(),
             ..default()
+        })
+        .with_children(|parent| {
+            create_button(parent, settings, "Run", ProjectManagerAction::Run, ButtonOrientation::Vertical);
+            create_button(parent, settings, "Rename", ProjectManagerAction::Rename, ButtonOrientation::Vertical);
+            create_button(parent, settings, "Remove", ProjectManagerAction::Remove, ButtonOrientation::Vertical);
         })
         .id();
 
@@ -147,4 +159,3 @@ pub fn setup_ui(
         ..default()
     });
 }
-

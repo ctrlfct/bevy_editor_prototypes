@@ -24,7 +24,7 @@ fn main() {
     .add_systems(Update, gui::file_panel::file_button_system)
     .add_systems(Update, gui::file_panel::manage_file_button_panel)
     .add_systems(Update, editor::new_project::new_project_system)
-    .add_systems(Update, gui::project_manager::open_project_selector_system)
+    .add_systems(Update, gui::project_manager::handle_project_manager)
     .add_systems(Update, gui::new_project::handle_project_creator)
     .add_systems(Update, editor::close_editor::close_editor_system)
     
